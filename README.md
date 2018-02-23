@@ -5,7 +5,7 @@ This code constitutes an end-to-end system for the purpose of extracting interac
 The challenge/task description can be found here:
 http://www.biocreative.org/tasks/biocreative-vi/track-4/
 
-# Requirements
+## Requirements
 
 ~~~
 numpy
@@ -42,11 +42,9 @@ All intermediate outputs of the pipeline will be saved to the `pipeline_test` fo
 
 `python generate-pipeline-feed.py Final_Gold_Relation.json`
 
-This will create a new file `pipeline_feed.txt` serving as input to our pipeline. The input should only include the *PMID* and title/abstract *text* of each article, one article per line. No groundtruth annotations are fed into the pipeline.
+This will create a new file `pipeline_feed.txt` serving as input to our pipeline. The input should only include the *PMID* and title/abstract *text* of each article, one article per line. No groundtruth annotations are fed into the pipeline. Once a feed file is generated, from the root directory, we can run a series of commands to take the feed and process it through each component in the pipeline. For convenience, we provide a bash script named `run_pipeline_test.sh` to handle this aspect of the system: 
 
-Once a feed file is generated, from the root directory, we can run a series of commands to take the feed and process it through each component in the pipeline. For convenience, we provide a bash script named `run_pipeline_test.sh` to handle this aspect of the system: 
-
-~~~
+```bash
 PIPELINE=pipeline_test
 INPUT=$PIPELINE/pipeline_feed.txt
 PTOKEN=$PIPELINE/pipeline1.tokenized.txt
@@ -64,7 +62,9 @@ python -u ner_correction/annotate.py --datapath=$DATAPATH < $PNER > $PNER2
 python -u gn_model/annotate.py --datapath=$DATAPATH --cachepath=$GNCACHE < $PNER2 > $PGNORM
 python -u rc_model/extract.py --datapath=$DATAPATH < $PGNORM > $OUTPUT
 echo "Output saved to $OUTPUT"
-~~~
+```
+
+**WARNING: Please note that, for gene normalization, the program will make frequent external queries to the NCBI gene database. Caching is implemented to avoid querying redundant information.**
 
 It is sufficient to run the following command from the root directory:
 

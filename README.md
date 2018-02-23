@@ -15,7 +15,7 @@ sklearn
 tensorflow 1.0.0 with tensorflow-fold
 ~~~
 
-In order to train the NER/RC model, pre-trained embeddings are needed. Since these files tend to be very big, you have to download them separately and add them to the embedding folder. See [embeddings/README.md](embeddings/README.md) for more details.
+In order to train the NER and RC models, pre-trained word embeddings are needed. Since these files tend to gigabytes in size, they must be downloaded separately to the embedding folder. See [embeddings/README.md](embeddings/README.md) for more details on how to do this.
 
 # Training
 

@@ -84,3 +84,23 @@ https://github.com/ncbi-nlp/BC6PM
 To run the evaluation script for this dataset:
 
 `python eval_json.py relation Final_Gold_Relation.json PMtask_results.json`
+
+# Acknowledgements
+
+Please consider citing the following paper(s) if you use this software in your work.
+
+This implementation is used in the following work:
+
+> TBA
+
+
+The NER model implementation is heavily inspired by the model proposed in the following paper:
+
+> Chiu, Jason PC, and Eric Nichols. "Named Entity Recognition with Bidirectional LSTM-CNNs." Transactions of the Association for Computational Linguistics 4 (2016): 357-370. [Preprint](https://arxiv.org/pdf/1511.08308.pdf)
+
+# Author
+
+> Tung Tran  
+> tung.tran **[at]** uky.edu  
+> <http://tttran.net/>
+

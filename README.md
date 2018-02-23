@@ -1,6 +1,6 @@
 # End-to-End Pipeline for the BioCreative VI Precision Medicine Relation Extraction Task
 
-This code constitutes an end-to-end system for the purpose of extracting interacting protein-protein pairs affected by a mutation. It includes three primary components in the pipeline: a supervised named entity recognition (NER) model, a gene normalization (GN), and a supervised relation classification (RC) model. 
+This code constitutes an end-to-end system for the purpose of extracting interacting protein-protein pairs affected by a mutation. It includes three primary components in the pipeline: a supervised named entity recognition (NER) model, a gene normalization (GN) system, and a supervised relation classification (RC) model. 
 
 The challenge/task description can be found here:
 http://www.biocreative.org/tasks/biocreative-vi/track-4/

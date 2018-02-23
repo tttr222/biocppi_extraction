@@ -1,6 +1,6 @@
 # End-to-End Pipeline for the BioCreative VI Precision Medicine Relation Extraction Task
 
-This code constitutes an end-to-end system for the purpose of extracting interacting protein-protein pairs affected by a mutation. It includes three primary components in the pipeline: a supervised named entity recognition (NER) model, a gene normalization (GN) system, and a supervised relation classification (RC) model. 
+This code constitutes an end-to-end system for the purpose of extracting interacting protein-protein pairs affected by a genetic mutation. It includes three primary components in the pipeline: a supervised named entity recognition (NER) model, a gene normalization (GN) system, and a supervised relation classification (RC) model. 
 
 The challenge/task description can be found here:
 http://www.biocreative.org/tasks/biocreative-vi/track-4/
@@ -34,15 +34,15 @@ From the `rc_model` directory, run:
 
 `python train.py --datapath=../corpus_train`
 
-This will similarly create a `saved_model_ppi` folder and word vocabulary file.
+This will similarly create a `saved_model_ppi` folder and word vocabulary file in the `corpus_train` directory.
 
-# Annotating the Test Set
+# Test Set Annotation
 
-All intermediate outputs of the pipeline will be saved to the `pipeline_test` folder. Let's assume we want to annotate articles from the file `Final_Gold_Relation.json` corresponding to the test set. Keep in mind that this contains the articles and their groundtruth annotations. First, we will run the following command from inside the `pipeline_test` directory:
+All intermediate outputs of the pipeline will be saved to the `pipeline_test` folder. Let's assume we want to annotate articles from the file `Final_Gold_Relation.json` corresponding to the test set. Keep in mind that this contains the both articles and their groundtruth annotations. First, we will run the following command from inside the `pipeline_test` directory:
 
 `python generate-pipeline-feed.py Final_Gold_Relation.json`
 
-This will create a new file `pipeline_feed.txt` serving as input to our pipeline. The input should only include the PMID and the article title/abstract text of each article, one article per line. No groundtruth annotations are fed into the pipeline.
+This will create a new file `pipeline_feed.txt` serving as input to our pipeline. The input should only include the *PMID* and title/abstract *text* of each article, one article per line. No groundtruth annotations are fed into the pipeline.
 
 Once a feed file is generated, from the root directory, we can run a series of commands to take the feed and process it through each component in the pipeline. For convenience, we provide a bash script named `run_pipeline_test.sh` to handle this aspect of the system: 
 
@@ -76,7 +76,7 @@ This will produce an output file at `pipeline_feed/pipeline_output.txt`. The las
 
 This will produce a nicely formatted JSON file with our predicted annotations: `PMtask_results.json`.
 
-# Evaluating Predictions
+# Evaluation
 
 The official evaluation script is found here:
 https://github.com/ncbi-nlp/BC6PM

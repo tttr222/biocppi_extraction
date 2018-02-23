@@ -9,9 +9,7 @@ http://www.biocreative.org/tasks/biocreative-vi/track-4/
 
 ~~~
 numpy
-argparse
 pandas
-fileinput
 sklearn
 tensorflow 1.0.0 with tensorflow-fold
 ~~~
@@ -87,14 +85,11 @@ To run the evaluation script for this dataset:
 
 # Acknowledgements
 
-Please consider citing the following paper(s) if you use this software in your work.
-
-This implementation is used in the following work:
+Please consider citing the following paper if you use this software in your work:
 
 > TBA
 
-
-The NER model implementation is heavily inspired by the model proposed in the following paper:
+The NER model of this system is heavily inspired by the model proposed in the following paper:
 
 > Chiu, Jason PC, and Eric Nichols. "Named Entity Recognition with Bidirectional LSTM-CNNs." Transactions of the Association for Computational Linguistics 4 (2016): 357-370. [Preprint](https://arxiv.org/pdf/1511.08308.pdf)
 

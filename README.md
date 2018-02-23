@@ -8,15 +8,18 @@ http://www.biocreative.org/tasks/biocreative-vi/track-4/
 ## Requirements
 
 ~~~
+python 2.7
 numpy
 pandas
 sklearn
 tensorflow 1.0.0 with tensorflow-fold
 ~~~
 
+In order to train the NER/RC model, pre-trained embeddings are needed. Since these files tend to be very big, you have to download them separately and add them to the embedding folder. See [embeddings/README.md](embeddings/README.md) for more details.
+
 # Training
 
-This will train on the pre-formatted data provided in the `corpus_train` directory. Note that this data is compiled from multiple sources including an *augmented* version of the original training data; please see the paper below for more details on the training data composition.
+This will train on the pre-formatted data provided in the `corpus_train` directory. Note that this data is compiled from multiple sources including an *augmented* version of the original training data; please see the paper below for more details on the training data composition. 
 
 ## Named Entity Recognition (NER)
 

@@ -261,7 +261,7 @@ class WordCNN(object):
 
             save_marker = ''
             if vf >= best_score:
-                best_model = './tmp/model-{}-t{}-e{}-s{}.ckpt'.format(
+                best_model = './scratch/model-{}-t{}-e{}-s{}.ckpt'.format(
                     type(self).__name__.lower(), job_hash,i,seed)
                 
                 best_epoch, best_score = i, vf

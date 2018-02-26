@@ -292,7 +292,7 @@ class BiLSTM(object):
             
             save_marker = ''
             if vf >= best_score:
-                best_model = 'tmp/model-{}-{}-e{}-s{}.ckpt'.format(
+                best_model = 'scratch/model-{}-{}-e{}-s{}.ckpt'.format(
                     session_id,type(self).__name__.lower(),i,seed)
                 
                 best_epoch, best_score = i, vf

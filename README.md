@@ -16,7 +16,7 @@ nltk
 tensorflow 1.0.0 with tensorflow-fold
 ~~~
 
-In order to train the NER and RC models, pre-trained word embeddings are needed. Since these files tend to gigabytes in size, they must be downloaded separately to the embedding folder. See [embeddings/README.md](embeddings/README.md) for more details on how to do this.
+In order to train the NER and RC models, pre-trained word embeddings are needed. Since these files tend to be large (gigabytes), they must be downloaded separately to the embedding folder. See [embeddings/README.md](embeddings/README.md) for more details on how to do this.
 
 # Training
 

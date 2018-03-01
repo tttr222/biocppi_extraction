@@ -83,7 +83,6 @@ def main(args):
             pair_scores[k].append(pair_scores[k][0])
         
         print '\t'.join([pmid, a, b, str(pair_scores[k][0]), str(pair_scores[k][1])])
-        
 
 def extract_candidates(tokens, pmids):
     examples = []

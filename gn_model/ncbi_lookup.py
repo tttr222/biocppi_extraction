@@ -4,8 +4,6 @@ import urllib2, urllib
 import pandas as pd
 
 api_endpoint = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
-
-
 pubtator_api_endpoint = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene/{}/PubTator/'
 
 def gene_normalization(span, pmid, gene_cache_file, pmid_cache_file, pubtator_cache_file):
@@ -45,6 +43,7 @@ def gene_name_lookup(gene_name, cache_file = 'gene_map.cache'):
                 'term': '{}'.format(gene_name),
                 'sort': 'relevance',
                  'retmax': 3000 }
+    
     query = urllib.urlencode(api_query_gene)
     xml = urllib2.urlopen('{}?{}'.format(api_endpoint,query)).read()
     match = re.findall(r'<Id>([0-9]+)</Id>',xml)
@@ -81,6 +80,7 @@ def gene_pmid_lookup(pmid, cache_file = 'pmid_map.cache'):
                         'sort': 'relevance',
                         'retmax': 100
                      }
+    
     query = urllib.urlencode(api_query_pmid)
     xml = urllib2.urlopen('{}?{}'.format(api_endpoint,query)).read()
     match = re.findall(r'<Id>([0-9]+)</Id>',xml)

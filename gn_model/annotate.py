@@ -24,35 +24,7 @@ batch_size = 500 # 8 without aux
 def main(args):
     print >> sys.stderr, args
     random.seed(args.seed)
-    assert(os.path.isdir(args.datapath))
-    
-    fold_dir = args.datapath
-    '''
-    trainset = load_file(fold_dir + '/train.normalizer.txt',load_labels=True)
-    X_train = zip(trainset['pmid'].tolist(), trainset['text'].tolist())
-    y_train = trainset['label'].tolist()
-    print >> sys.stderr, "Training", len(X_train), len(y_train)
-    
-    trainaux0 = load_file(fold_dir + '/gnorm0.train.normalizer.txt',load_labels=True)
-    trainaux1 = load_file(fold_dir + '/gnorm1.train.normalizer.txt',load_labels=True)
-    trainaux2 = load_file(fold_dir + '/gnorm2.train.normalizer.txt',load_labels=True)
-    trainaux3 = load_lexicon(fold_dir + '/entrezGeneLexicon.list')
-    trainaux = pd.concat([trainaux0,trainaux1,trainaux2,trainaux3])
-    
-    X_aux = trainaux['text'].tolist()
-    y_aux = trainaux['label'].tolist()
-    print >> sys.stderr, "Loading aux", len(X_aux)
-    print >> sys.stderr, "Training with aux", len(X_train)
-    
-    labels = sorted(set(y_train + y_aux))
-    print >> sys.stderr, "labels", sorted(set(labels))[:10]
-    
-    #hmap = {}
-    #with open(fold_dir + '/homologene.data','r') as f:
-    #    for l in f:
-    #        group_id, _, gene_id, _ = l.split('\t',3)
-    #        hmap[gene_id] = group_id
-    '''
+
     lines = []
     for line in fileinput.input(args.files):
         lines.append(line)
@@ -84,8 +56,9 @@ def main(args):
     
     gn_model = GeneNormalizer(gene_cache_file, pmid_cache_file, pubtator_cache_file)
     #gn_model.fit(X_train, y_train, X_aux, y_aux)
-
-    for pmid in pmids:
+    
+    for ij, pmid in enumerate(pmids):
+        print >> sys.stderr, "Processing {}/{} {}".format(ij+1,len(pmids),pmid)
         print '###' + pmid
         print ''
         

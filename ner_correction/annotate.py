@@ -109,8 +109,8 @@ def main(args):
             curlist.append(tuple(l.strip().split(' ')))
 
     corrections = 0
-    for pmid in pmids:
-	print >> sys.stderr, "Processing", pmid
+    for ij, pmid in enumerate(pmids):
+        print >> sys.stderr, "Processing {}/{} {}".format(ij+1,len(pmids),pmid)
         print '###' + pmid
         print ''
         for line in tokens[pmid]:

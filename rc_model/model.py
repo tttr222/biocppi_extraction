@@ -44,9 +44,6 @@ class WordCNN(object):
             else:
                 raise Exception('Unknown optimizer {}'.format(optimizer))
         
-        #print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
-        #    self.optimizer, self.lrate, self.decay)
-        
         self.embedding_factor = embedding_factor
         self.dropout_keep = dropout_keep
         self.labels = labels
@@ -61,18 +58,16 @@ class WordCNN(object):
     
     def _compile(self):
         output_size = len(self.labels)
-        
-        #batch size
-        bsize = None
+    
+        bsize = None # Batch size
         seqlen = self.max_sequence_length
 
-        # input and output
+        # Input and output
         self.y_true = tf.placeholder(tf.float32, [bsize, len(self.labels)])
         self.x_input = tf.placeholder(tf.int32, [bsize, seqlen])
         self.keep_prob = tf.placeholder_with_default(tf.constant(1.0),shape=None)
         
-        # -----------------------------------------------------------------------------
-        # embeddings
+        # ----------------------------- CNN Layer -----------------------------------
         W_em = tf.Variable(tf.truncated_normal([len(self.word_vocab), self.embedding_size], 
                     stddev=1.0/np.sqrt(seqlen)))
         self.w_input = tf.placeholder(tf.float32, [len(self.word_vocab), self.embedding_size])
@@ -109,6 +104,8 @@ class WordCNN(object):
         cnn_pool = tf.concat(pooled_outputs,axis=3)
         cnn_pool_flat = tf.nn.dropout(tf.reshape(cnn_pool, [-1, num_filters_total]), self.keep_prob)
         
+        # ----------------------------- Output Layer -----------------------------------
+
         W_out = tf.Variable(tf.truncated_normal([num_filters_total, len(self.labels)], 
                     stddev=1.0/np.sqrt(num_filters_total)))
         b_out = tf.Variable(tf.zeros([len(self.labels)]))
@@ -143,11 +140,9 @@ class WordCNN(object):
         
         self.sess.run(tf.global_variables_initializer())
         if self.word_embeddings is not None:
-            #print "Initializing word embeddings matrix with pretained values.."
             self.sess.run(self.embedding_init, { self.w_input: self.word_embeddings})
             
         self.saver = tf.train.Saver(max_to_keep=100)
-        #print >> sys.stderr, "Compiled model with feature vector of length {}".format(num_filters_total)
     
     def _onehot(self, y, categories):
         y_onehot = np.zeros((len(y),len(categories)))
@@ -157,8 +152,6 @@ class WordCNN(object):
         return y_onehot
     
     def _build_feed_dict(self,batch,dropout=True):
-        #x_data, y_true = zip(*batch)
-        #x_train, f_train, h_train, u_train  = zip(*x_data)
         feed_dict = {}
         
         X_feed = []
@@ -182,7 +175,6 @@ class WordCNN(object):
             X_feed.append(xin)
             y_feed.append(yy)
     
-        #print "Found maxlen of", maxlen
         X_feed = [ xx + [0] * (self.max_sequence_length - len(xx)) for xx in X_feed ]
         
         feed_dict[self.x_input] = X_feed
@@ -270,11 +262,8 @@ class WordCNN(object):
                 
             elapsed = int(time.time() - estart)
             emin, esec = elapsed / 60, elapsed % 60
-            #print "epoch {} loss {:.5f} fit {:.2%} vloss {:.5f} fit {:.2%} [{}m{}s] {}".format(i, 
-            #    loss, acc, vloss, vacc, emin, esec, save_marker)
             print "epoch {} bsize={} loss {:.5f} fit {:.2%} val {:.2%}/{:.2%}/{:.2%}[{}m{}s] {}".format(i, 
                 batch_size, loss, f, vf, vprecision, vrecall, emin, esec, save_marker)
-                
         
         if best_model is None:
             print "WARNING: NO GOOD FIT"

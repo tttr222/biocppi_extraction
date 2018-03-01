@@ -4,7 +4,6 @@ import numpy as np
 from model import BiLSTM
 import sklearn.metrics as skm
 import argparse
-import evaluation
 
 parser = argparse.ArgumentParser(description='Train and evaluate BiLSTM on a given dataset')
 parser.add_argument('files', metavar='FILE', nargs='*', help='files to read, if empty, stdin is used')
@@ -98,7 +97,8 @@ def main(args):
 	print >> sys.stderr, "Restoring model {}/{}".format(j+1,num_ensembles)
         models.append(m)
     
-    for pmid in pmids:
+    for ij, pmid in enumerate(pmids):
+        print >> sys.stderr, "Processing {}/{} {}".format(ij+1,len(pmids),pmid)
         flattened_len = sum([ len(x) for x in tokens[pmid] ])
         proba_cumulative = np.zeros((flattened_len,len(labels)))
 
@@ -121,24 +121,6 @@ def main(args):
                 print ' '.join(pair)
             
             print ''
-
-def report_performance(model, X_test,y_test, outname):
-    micro_evaluation = model.evaluate(X_test,y_test,macro=False)
-    macro_evaluation = model.evaluate(X_test,y_test,macro=True)
-    print "Micro Test Eval: F={:.4f} P={:.4f} R={:.4f}".format(*micro_evaluation)
-    print "Macro Test Eval: F={:.4f} P={:.4f} R={:.4f}".format(*macro_evaluation)
-    
-    pred_test = model.predict(X_test)
-    
-    with open(outname,'w') as f:
-        for (x,y,z) in zip(X_test,y_test,pred_test):
-            for token, y_true, y_pred in zip(x,y,z):
-                print >> f, token, y_true, y_pred
-            
-            print >> f, ''
-    
-    with open(outname,'r') as f:
-        evaluation.report(evaluation.evaluate(f))
 
 def load_dataset(fname, shuffle=False):
     dataset = []

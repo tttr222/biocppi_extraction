@@ -116,69 +116,47 @@ def main(args):
         m.save(save_path)
         print "Saved model {} to {}".format(j,save_path)
 
-def report_performance(model, X_test,y_test, outname):
-    micro_evaluation = model.evaluate(X_test,y_test,macro=False)
-    macro_evaluation = model.evaluate(X_test,y_test,macro=True)
-    print "Micro Test Eval: F={:.4f} P={:.4f} R={:.4f}".format(*micro_evaluation)
-    print "Macro Test Eval: F={:.4f} P={:.4f} R={:.4f}".format(*macro_evaluation)
-    
-    pred_test = model.predict(X_test)
-    
-    with open(outname,'w') as f:
-        for (x,y,z) in zip(X_test,y_test,pred_test):
-            for token, y_true, y_pred in zip(x,y,z):
-                print >> f, token, y_true, y_pred
-            
-            print >> f, ''
-    
-    with open(outname,'r') as f:
-        evaluation.report(evaluation.evaluate(f))
-
 def load_embeddings(fname, vocab, dim=200):
     cached = 'scratch/embeddings_{}.npy'.format(abs(hash(' '.join(vocab))))
     
     if not os.path.exists(cached):
-        pid = os.fork()
+        weight_matrix = np.random.uniform(-0.05, 0.05, (len(vocab),dim)).astype(np.float32)
+        ct = 0
         
-        if pid == 0:
-            weight_matrix = np.random.uniform(-0.05, 0.05, 
-                            (len(vocab),dim)).astype(np.float32)
-            ct = 0
+        ctime = time.time()
+        print 'Loading embeddings..',
+        with codecs.open(fname, encoding='utf-8') as f:
+            data = f.read()
+        print '{}s'.format(int(time.time()-ctime))
+        
+        ctime = time.time()
+        print 'Organizing embeddings..',
+        lookup = {}
+        for line in data.split('\n'):
+            if line.strip() == '':
+                continue
             
-            lookup = {}
-            with codecs.open(fname, encoding='utf-8') as f:
-                for line in f.read().split('\n'):
-                    if line.strip() == '':
-                        continue
-                    
-                    word, vec = line.split(u' ', 1)
-                    lookup[word] = vec
+            word, vec = line.split(u' ', 1)
+            lookup[word] = vec
+        print '{}s'.format(int(time.time()-ctime))
             
-            for word in vocab:
-                if word not in lookup:
-                    continue
-                
-                vec = lookup[word]
-                idx = vocab.index(word)
-                vec = np.array(vec.split(), dtype=np.float32)
-                weight_matrix[idx,:dim] = vec[:dim]
-                ct += 1
-                if ct % 33 == 0:
-                    sys.stdout.write('Vectorizing embeddings {}/{}   \r'
-                                    .format(ct, len(vocab)))
+        for word in vocab:
+            if word not in lookup:
+                continue
             
-            
-            print "Loaded {}/{} embedding vectors".format(ct, len(vocab))
-            np.save(cached,weight_matrix)
-            exit()
-        else:
-            print 'Loading embeddings..',
-            ctime = time.time()
-            os.wait()
-            print '{}s'.format(int(time.time()-ctime))
+            vec = lookup[word]
+            idx = vocab.index(word)
+            vec = np.array(vec.split(), dtype=np.float32)
+            weight_matrix[idx,:dim] = vec[:dim]
+            ct += 1
+            if ct % 33 == 0:
+                sys.stdout.write('Vectorizing embeddings {}/{}   \r'.format(ct, len(vocab)))
+        
+        print "Loaded {}/{} embedding vectors".format(ct, len(vocab))
+        np.save(cached,weight_matrix)
+    else:
+        weight_matrix = np.load(cached)
     
-    
-    weight_matrix = np.load(cached)
     print "Loaded weight matrix {}..".format(weight_matrix.shape)
     
     return weight_matrix

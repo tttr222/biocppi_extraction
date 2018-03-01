@@ -16,10 +16,11 @@ def main(args):
         obj = json.load(f)
     
     for i in range(len(obj['documents'])):
+        print "Processing {}/{}".format(i+1, len(obj['documents']))
+
         obj['documents'][i]['relations'] = []
         
         df_doc = df.loc[df['pmid'] == obj['documents'][i]['id']]
-        print df_doc
         relid = 0
         
         best_rel = []
@@ -41,7 +42,7 @@ def main(args):
         if len(obj['documents'][i]['relations']) == 0:
             obj['documents'][i]['relations'].append(best_rel)
         
-        print obj['documents'][i]['id'], obj['documents'][i]['relations']
+        #print obj['documents'][i]['id'], obj['documents'][i]['relations']
     
     with open('PMtask_results.json','w') as f:
         json.dump(obj,f)

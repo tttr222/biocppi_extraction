@@ -4,9 +4,6 @@ import tensorflow as tf
 import sklearn.metrics as skm
 import evaluation
 
-
-# 0.001 uniform for embeddings, 0.1 for adagrad accumulators, learning rate 0.1, 0.8 
-
 class BiLSTM(object):
     def __init__(self, labels, word_vocab, 
                     word_embeddings=None,
@@ -46,9 +43,6 @@ class BiLSTM(object):
                 self.lrate = 0.2
             else:
                 raise Exception('Unknown optimizer {}'.format(optimizer))
-        
-        #print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
-        #    self.optimizer, self.lrate, self.decay)
         
         self.embedding_factor = embedding_factor
         self.rnn_dim = lstm_dim
@@ -111,7 +105,7 @@ class BiLSTM(object):
                         >> td.AllOf(char_input,char_features) >> td.ZipWith(td.Concat()) 
                         >> cnn_layer)        
 
-        # ---------------------- Word Features -------------------------
+        # ---------------------- Word Features ---------------------------
         
         word_emb = td.Embedding(num_buckets=len(self.word_vocab),
                                 num_units_out=self.embedding_size,
@@ -141,7 +135,7 @@ class BiLSTM(object):
                         >> td.Embedding(num_buckets=5,
                                 num_units_out=32))
         
-        #-------------------- Output Layer --------------------------
+        #------------------------ Output Layer ---------------------------
         
         rnn_fwdcell = td.ScopedLayer(tf.contrib.rnn.LSTMCell(
                         num_units=self.rnn_dim), 'lstm_fwd')
@@ -243,7 +237,8 @@ class BiLSTM(object):
                 k+1,len(minibatches),mavg_loss))
             sys.stdout.flush()
     
-    def fit(self, X, y, X_dev, y_dev, num_iterations = 10000, num_it_per_ckpt = 100, batch_size = 8, seed = 1, fb2 = False):
+    def fit(self, X, y, X_dev, y_dev, num_iterations = 10000, 
+            num_it_per_ckpt = 100, batch_size = 8, seed = 1, fb2 = False):
         random.seed(seed)
         session_id = int(time.time())
         trainset = zip(X, [ self._onehot(l,self.labels) for l in y ])

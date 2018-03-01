@@ -23,7 +23,6 @@ parser.add_argument('--seed', dest='seed', type=int,
                     default=1, help='seed for training')
 
 num_ensembles = 10
-load_fuzzy = False
 
 def main(args):
     print >> sys.stderr, args
@@ -31,7 +30,7 @@ def main(args):
     assert(os.path.isdir(args.datapath))
     fold_dir = args.datapath
     
-    X_train, y_train = load_dataset(fold_dir,'train.ppi.txt',fuzzy=load_fuzzy)
+    X_train, y_train = load_dataset(fold_dir,'train.ppi.txt')
     
     print "Positives", y_train.count('Positive'), "Negatives", y_train.count('Negative')
     
@@ -83,41 +82,6 @@ def load_dataset(fold_dir,fname,fuzzy=False):
     tokens, relations, pmids = load_annotated(lines)
     examples = extract_candidates(tokens, relations, pmids)
     print "Loading dataset from {}: {} articles, {} examples".format(fname, len(pmids), len(examples))
-    
-    '''
-    pos = 0
-    neg = 0
-    pos_all = 0
-    neg_all = 0
-    for (pid, a, b, x), label in examples:
-        print pid, a, b, label
-        if a != b:
-            if label == 'Positive':
-                pos += 1
-            else:
-                neg += 1
-        
-        if label == 'Positive':
-            pos_all += 1
-        else:
-            neg_all += 1
-        
-    print pos_all, neg_all
-    print pos, neg
-    '''
-    
-    if fuzzy:
-        lines = []
-        fuzzy_file = fname[:-4] + '.fuzzy.txt'
-        with open(os.path.join(fold_dir,fuzzy_file),'r') as f:
-            for line in f:
-                lines.append(line)
-        
-        tokens2, _, pmids2 = load_annotated(lines)
-        examples2 = extract_candidates(tokens2, relations, pmids)
-        examples += examples2
-        print "Loading dataset from {}: {} articles, {} examples".format(fuzzy_file, len(pmids2), len(examples2))
-    
     return zip(*examples)
 
 def extract_candidates(tokens, relations, pmids):

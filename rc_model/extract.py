@@ -44,6 +44,7 @@ def main(args):
     labels = ['Negative','Positive']
     
     proba_cumulative = np.zeros((len(X_test),len(labels)))
+    
     for j in range(num_ensembles):
         m = WordCNN(labels,word_vocab,
                     word_embeddings=None,
@@ -51,7 +52,8 @@ def main(args):
         
         save_path = '{}/{}/model_{}'.format(args.datapath,model_name,j)
         m.restore(save_path)
-        
+        print >> sys.stderr, "Restoring model {}/{}".format(j+1,num_ensembles)        
+
         proba_cumulative += m.predict_proba(X_test)
     
     proba_cumulative /= num_ensembles

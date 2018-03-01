@@ -27,7 +27,7 @@ def main(args):
     assert(os.path.isdir(args.datapath))
     
     fold_dir = args.datapath
-    
+    '''
     trainset = load_file(fold_dir + '/train.normalizer.txt',load_labels=True)
     X_train = zip(trainset['pmid'].tolist(), trainset['text'].tolist())
     y_train = trainset['label'].tolist()
@@ -52,7 +52,7 @@ def main(args):
     #    for l in f:
     #        group_id, _, gene_id, _ = l.split('\t',3)
     #        hmap[gene_id] = group_id
-    
+    '''
     lines = []
     for line in fileinput.input(args.files):
         lines.append(line)
@@ -83,7 +83,7 @@ def main(args):
     pubtator_cache_file = os.path.join(args.cachepath,'pubtator_pmid_map.cache')
     
     gn_model = GeneNormalizer(gene_cache_file, pmid_cache_file, pubtator_cache_file)
-    gn_model.fit(X_train, y_train, X_aux, y_aux)
+    #gn_model.fit(X_train, y_train, X_aux, y_aux)
 
     for pmid in pmids:
         print '###' + pmid

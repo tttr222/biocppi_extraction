@@ -44,8 +44,8 @@ class WordCNN(object):
             else:
                 raise Exception('Unknown optimizer {}'.format(optimizer))
         
-        print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
-            self.optimizer, self.lrate, self.decay)
+        #print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
+        #    self.optimizer, self.lrate, self.decay)
         
         self.embedding_factor = embedding_factor
         self.dropout_keep = dropout_keep
@@ -143,11 +143,11 @@ class WordCNN(object):
         
         self.sess.run(tf.global_variables_initializer())
         if self.word_embeddings is not None:
-            print "Initializing word embeddings matrix with pretained values.."
+            #print "Initializing word embeddings matrix with pretained values.."
             self.sess.run(self.embedding_init, { self.w_input: self.word_embeddings})
             
         self.saver = tf.train.Saver(max_to_keep=100)
-        print >> sys.stderr, "Compiled model with feature vector of length {}".format(num_filters_total)
+        #print >> sys.stderr, "Compiled model with feature vector of length {}".format(num_filters_total)
     
     def _onehot(self, y, categories):
         y_onehot = np.zeros((len(y),len(categories)))

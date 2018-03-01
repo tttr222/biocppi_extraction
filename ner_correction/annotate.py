@@ -63,7 +63,7 @@ def main(args):
     assert(os.path.isdir(args.datapath))
     fold_dir = args.datapath
     
-    lexicon = load_lexicon(fold_dir + '/entrezGeneLexicon.list')
+    lexicon = load_lexicon(os.path.join(args.datapath,'/entrezGeneLexicon.list'))
     
     spans = [ wordpunct_tokenize(x) for x in set(lexicon['text'].tolist()) ]
     sorted_spans = sorted(spans, key=lambda x: len(x),reverse=True)
@@ -110,6 +110,7 @@ def main(args):
 
     corrections = 0
     for pmid in pmids:
+	print >> sys.stderr, "Processing", pmid
         print '###' + pmid
         print ''
         for line in tokens[pmid]:

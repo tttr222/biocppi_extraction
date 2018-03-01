@@ -47,8 +47,8 @@ class BiLSTM(object):
             else:
                 raise Exception('Unknown optimizer {}'.format(optimizer))
         
-        print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
-            self.optimizer, self.lrate, self.decay)
+        #print >> sys.stderr, "Optimizer: {}, Learning rate: {}, Decay rate: {}".format(
+        #    self.optimizer, self.lrate, self.decay)
         
         self.embedding_factor = embedding_factor
         self.rnn_dim = lstm_dim
@@ -72,7 +72,6 @@ class BiLSTM(object):
         fshape = (self.window_size * (self.char_embedding_size + self.char_feature_embedding_size), self.num_filters)
         filt_w3 = tf.Variable(tf.random_normal(fshape, stddev=0.05))
 
-        # todo, relu
         def CNN_Window3(filters):
             return td.Function(lambda a, b, c: cnn_operation([a,b,c],filters))
 
@@ -88,7 +87,7 @@ class BiLSTM(object):
                         >> td.Map(CNN_Window3(filt_w3)) 
                         >> td.Max())
 
-        # --------- char features
+        # --------------------- Character Features -----------------------
         
         def charfeature_lookup(c):
             if c in string.lowercase:
@@ -112,7 +111,7 @@ class BiLSTM(object):
                         >> td.AllOf(char_input,char_features) >> td.ZipWith(td.Concat()) 
                         >> cnn_layer)        
 
-        # --------- word features
+        # ---------------------- Word Features -------------------------
         
         word_emb = td.Embedding(num_buckets=len(self.word_vocab),
                                 num_units_out=self.embedding_size,
@@ -142,7 +141,7 @@ class BiLSTM(object):
                         >> td.Embedding(num_buckets=5,
                                 num_units_out=32))
         
-        #-----------
+        #-------------------- Output Layer --------------------------
         
         rnn_fwdcell = td.ScopedLayer(tf.contrib.rnn.LSTMCell(
                         num_units=self.rnn_dim), 'lstm_fwd')
@@ -166,10 +165,6 @@ class BiLSTM(object):
                         >> td.Map(output_layer) 
                         >> td.Map(td.Metric('y_out'))) >> td.Void()
     
-        #with self.sess.as_default(): 
-        #    print network.eval(['hello','what','yes'])
-
-        #exit()
         groundlabels = td.Map(td.Vector(output_size,dtype=tf.int32) 
                                 >> td.Metric('y_true')) >> td.Void()
     
@@ -249,9 +244,6 @@ class BiLSTM(object):
             sys.stdout.flush()
     
     def fit(self, X, y, X_dev, y_dev, num_iterations = 10000, num_it_per_ckpt = 100, batch_size = 8, seed = 1, fb2 = False):
-        if batch_size < 1:
-            batch_size = 20 #int(np.power(len(X), 1.0/2.0))
-        
         random.seed(seed)
         session_id = int(time.time())
         trainset = zip(X, [ self._onehot(l,self.labels) for l in y ])

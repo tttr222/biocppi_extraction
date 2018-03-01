@@ -13,12 +13,15 @@ argparse
 pandas
 fileinput
 sklearn
+nltk
 tensorflow 1.0.0 with tensorflow-fold
 ~~
 
 # Training
 
 This will train on the pre-formatted data provided in the `corpus_train` directory. Note that this data is compiled from multiple sources including an *augmented* version of the original training data; please see the paper below for more details on the training data composition.
+
+Training the supervised models may take up to 24 hours depending on hardware.
 
 ## Named Entity Recognition (NER)
 

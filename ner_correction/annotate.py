@@ -13,9 +13,6 @@ parser.add_argument('--datapath', dest='datapath', type=str,
 parser.add_argument('--seed', dest='seed', type=int, 
                     default=1, help='seed for training')
 
-num_ensembles = 3
-num_epoch = 40
-batch_size = 500 # 8 without aux
 
 def find_x_in_y(x,y, offset = 0):
     for i in range(offset,len(y)-len(x)):
@@ -61,9 +58,8 @@ def main(args):
     print >> sys.stderr, args
     random.seed(args.seed)
     assert(os.path.isdir(args.datapath))
-    fold_dir = args.datapath
     
-    lexicon = load_lexicon(os.path.join(args.datapath,'/entrezGeneLexicon.list'))
+    lexicon = load_lexicon(os.path.join(args.datapath,'entrezGeneLexicon.list'))
     
     spans = [ wordpunct_tokenize(x) for x in set(lexicon['text'].tolist()) ]
     sorted_spans = sorted(spans, key=lambda x: len(x),reverse=True)
